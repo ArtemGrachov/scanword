@@ -1,0 +1,84 @@
+*,
+*:before,
+*:after {
+    box-sizing: border-box;
+}
+
+.container {
+    border: 1px dashed grey;
+    padding: 20px;
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.scanword-wrap {
+    border: 3px double black;
+    display: inline-block;
+}
+
+.cell,
+.question {
+    width: 3rem;
+    height: 3rem;
+    line-height: 3em;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: 3rem;
+    text-align: center;
+    font-family: sans-serif;
+}
+
+.cell {
+    border-left: none;
+    text-transform: uppercase;
+    font-size: 30px;
+    border: 1px solid black;
+}
+
+.question {
+    background: lightgrey;
+    font-size: 12px;
+}
+
+.word {
+    margin: 10px;
+    display: inline-block;
+}
+
+.word.vertical {
+    width: 3rem;
+}
+
+.word.vertical .cell {
+    border-left: 1px solid black;
+    border-top: none;
+}
+
+.word:after {
+    display: table;
+    content: '';
+    clear: both;
+}
+
+.word.active {
+    background: #ebebeb;
+}
+
+.word.done {
+    background: lightblue;
+}
+
+.word.done .question {
+    /* background: none; */
+}
+
+.word.active .cell.active {
+    background: grey;
+}
+
+
+#debug {
+    padding: 10px;
+    border: 1px solid red;
+    margin: 10px 0;
+}
