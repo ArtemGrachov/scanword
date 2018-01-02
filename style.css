@@ -64,12 +64,8 @@
     background: #ebebeb;
 }
 
-.word.done {
+.done {
     background: lightblue;
-}
-
-.word.done .question {
-    /* background: none; */
 }
 
 .word.active .cell.active {

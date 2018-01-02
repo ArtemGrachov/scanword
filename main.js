@@ -6,67 +6,63 @@
     });
     var scanword = {
         width: 6,
-        height: 5,
+        height: 4,
         words: {
             't1': {
                 question: 'q1',
-                word: 'test1',
+                word: 'test',
                 answer: [],
                 active: true,
                 pos: {
-                    x: 0,
-                    y: 0,
-                    dir: 'horizontal'
+                    cell: 0,
+                    row: 0
                 }
             },
             't2': {
                 question: 'q2',
-                word: 'test2',
+                word: 'testa',
                 answer: [],
                 active: true,
                 pos: {
-                    x: 0,
-                    y: 1,
-                    dir: 'horizontal'
+                    cell: 0,
+                    row: 1
                 }
             },
             't3': {
-
                 question: 'q3',
-                word: 'test3',
+                word: 'testb',
                 answer: [],
                 active: true,
                 pos: {
-                    x: 0,
-                    y: 2,
-                    dir: 'horizontal'
+                    cell: 0,
+                    row: 2
                 }
             },
             't4': {
                 question: 'q4',
-                word: 'test4',
+                word: 'testc',
                 answer: [],
                 active: true,
                 pos: {
-                    x: 0,
-                    y: 3,
-                    dir: 'horizontal'
+                    cell: 0,
+                    row: 3
                 }
             },
             't5': {
                 question: 'q5',
-                word: 'test5',
+                word: 'abc',
                 answer: [],
                 active: true,
                 pos: {
-                    x: 0,
-                    y: 4,
-                    dir: 'vertical'
+                    cell: 5,
+                    row: 0,
+                    vertical: true
                 }
             }
         }
     }
-    var currentCell = undefined;
+    var currentCell = undefined,
+        direction = null;
     var inputFocus = function () {
         $('#scanword').on('click', function (e) {
             $('#inp').focus();
@@ -80,29 +76,23 @@
         currentCell.text(sym);
         var dataArr = currentCell.data('cell');
         for (var i = 0; i < dataArr.length; i++) {
-            var id = dataArr[i].id,
+            var word = scanword.words[dataArr[i].word],
                 index = dataArr[i].index,
-                answer = scanword[id].answer;
+                answer = word.answer;
+
             answer[index] = sym;
-            if (answer.join('') == scanword[id].word) {
-                scanword[id].active = false;
-                $('#' + id).addClass('done');
+            if (answer.join('') == word.word) {
+                setDone(word)
             }
         }
     }
-    var buildScanword = function (scanword) {
-        // for (var i in scanword) {
-        //     var word = scanword[i].word,
-        //         wordEl = $('<div id=' + i + ' class="word' + (scanword[i].pos.dir === 'vertical' ? ' vertical' : '') + '"></div>').appendTo('#scanword');
-        //     wordEl.append('<div class="question">' + scanword[i].question + '</div>')
-        //     for (var j = 0; j < word.length; j++) {
-        //         wordCell = $('<div class="cell"></div>').appendTo(wordEl);
-        //         wordCell.data('cell', [{
-        //             id: i,
-        //             index: j
-        //         }])
-        //     }
-        // }
+    var setDone = function (word) {
+        word.active = false;
+        wordCells(word, function (index, el) {
+            el.addClass('done');
+        })
+    }
+    var buildScanword = function () {
         var scanwordEl = $('#scanword');
         scanwordEl.css({
             'width': 3 * scanword.width + 'rem',
@@ -121,20 +111,38 @@
         }
         var words = scanword.words;
         for (var key in words) {
-
+            var word = words[key];
+            var cell = word.pos.cell,
+                row = word.pos.row;
+            var cellEl = $('.' + row + '-' + cell);
+            cellEl.addClass('question');
+            cellEl.text(word.question);
+            wordCells(word, function (index, el) {
+                var data = el.data('cell') ? el.data('cell') : [];
+                data.push({
+                    word: key,
+                    index: index
+                });
+                el.data('cell', data);
+            })
+        }
+    }
+    var wordCells = function (word, callback) {
+        var row = word.pos.row,
+            cell = word.pos.cell;
+        word.pos.vertical ? row++ : cell++;
+        for (var i = 0; i < word.word.length; i++) {
+            var el = $('.' + (word.pos.vertical ? ((row + i) + '-' + cell) : (row + '-' + (cell + i))));
+            callback(i, el);
         }
     }
     var activeWord = function () {
-        $('.word').on('click', function (e) {
+        $('.cell').on('click', function (e) {
             $(this)
                 .addClass('active')
                 .siblings()
                 .removeClass('active');
-            $(e.target)
-                .addClass('active')
-                .siblings()
-                .removeClass('active');
-            currentCell = $(e.target);
+            currentCell = $(this);
         });
     }
 })()
