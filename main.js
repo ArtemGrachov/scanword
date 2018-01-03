@@ -4,13 +4,23 @@
         buildScanword(scanword);
         activeWord();
     });
-    const scanword = {
+    const Scanword = function (words) {
+        this.words = words;
+    }
+    const Word = function (question, word, pos) {
+        this.question = question;
+        this.word = word;
+        this.pos = pos;
+        this.answer = [];
+        this.active = true;
+    }
+    const scanword0 = {
         width: 6,
         height: 4,
         words: {
             't1': {
                 question: 'q1',
-                word: 'test',
+                word: 'te',
                 answer: [],
                 active: true,
                 pos: {
@@ -58,9 +68,25 @@
                     row: 0,
                     vertical: true
                 }
+            },
+            't6': {
+                question: 't6',
+                word: 'tttt',
+                answer: [],
+                active: true,
+                pos: {
+                    cell: 3,
+                    row: 0,
+                    vertical: true
+                },
+                origin: {
+                    cell: 4,
+                    row: 0
+                }
             }
         }
     }
+    const scanword = scanword0;
     let currentCell = undefined,
         currentWord = undefined;
     let inputFocus = function () {
@@ -72,81 +98,83 @@
             if (currentCell) inputWord(e.key);
         })
         $('#inp').on('keydown', function (e) {
-            console.log(e.keyCode);
-            switch (e.keyCode) {
-                case 8:
-                case 46:
-                    if (e.keyCode == 8 && currentCell.text() == '') {
-                        toggleCell('prev');
-                    }
-                    var cellData = currentCell.data('cell');
-                    for (let key in cellData) {
-                        const data = cellData[key];
-                        data.word.answer[data.index] = null;
-                    }
-                    currentCell.text('')
-                    break;
-                case 9:
-                    console.log(currentCell);
-                    console.log(currentWord);
-                    break;
-                case 35:
-                    toggleCell('last');
-                    break;
-                case 36:
-                    toggleCell('first');
-                    break;
-                case 37:
-                    if (currentWord.pos.vertical) {
-                        console.log('left')
-                    } else {
-                        toggleCell('prev')
-                    }
-                    break;
-                case 38:
-                    if (currentWord.pos.vertical) {
-                        toggleCell('prev')
-                    } else {
-                        console.log('up')
-                    }
-                    break;
-                case 39:
-                    if (currentWord.pos.vertical) {
-                        console.log('right')
-                    } else {
-                        toggleCell('next')
-                    }
-                    break;
-                case 40:
-                    if (currentWord.pos.vertical) {
-                        toggleCell('next')
-                    } else {
-                        console.log('down')
-                    }
-                    break;
+            if (currentCell) {
+                switch (e.keyCode) {
+                    case 8:
+                    case 46:
+                        if (e.keyCode == 8 && currentCell.text() == '') {
+                            toggleCell('prev');
+                        }
+                        var cellData = currentCell.data('cell');
+                        for (let key in cellData) {
+                            const data = cellData[key];
+                            data.word.answer[data.index] = null;
+                        }
+                        currentCell.text('')
+                        break;
+                    case 9:
+                        e.preventDefault();
+                        toggleDir(currentCell.data('cell'));
+                        break;
+                    case 35:
+                        toggleCell('last');
+                        break;
+                    case 36:
+                        toggleCell('first');
+                        break;
+                    case 37:
+                        if (currentWord.pos.vertical) {
+                            console.log('left')
+                        } else {
+                            toggleCell('prev')
+                        }
+                        break;
+                    case 38:
+                        if (currentWord.pos.vertical) {
+                            toggleCell('prev')
+                        } else {
+                            console.log('up')
+                        }
+                        break;
+                    case 39:
+                        if (currentWord.pos.vertical) {
+                            console.log('right')
+                        } else {
+                            toggleCell('next')
+                        }
+                        break;
+                    case 40:
+                        if (currentWord.pos.vertical) {
+                            toggleCell('next')
+                        } else {
+                            console.log('down')
+                        }
+                        break;
+                }
             }
         })
     }
     let inputWord = function (sym) {
-        currentCell.text(sym);
-        let data = currentCell.data('cell');
-        for (let key in data) {
-            let wordObj = data[key].word,
-                answer = data[key].word.answer,
-                index = data[key].index;
-            answer[index] = sym;
-            if (answer.join('').toLowerCase() == wordObj.word) {
-                setDone(wordObj);
+        if (!currentCell.hasClass('done')) {
+            currentCell.text(sym);
+            let data = currentCell.data('cell');
+            for (let key in data) {
+                let wordObj = data[key].word,
+                    answer = data[key].word.answer,
+                    index = data[key].index;
+                answer[index] = sym;
+                if (answer.join('').toLowerCase() == wordObj.word) {
+                    setDone(wordObj);
+                }
             }
+            if (currentCell) toggleCell('next');
         }
-        if (currentCell) toggleCell('next');
     }
     let setDone = function (wordObj) {
         wordObj.active = false;
         wordCells(wordObj, function (index, el) {
             el.addClass('done');
         })
-        unfocus();
     }
     let removeSym = function (index) {
         currentWord.answer[index] = null;
@@ -175,7 +203,12 @@
                 row = word.pos.row;
             let cellEl = $('.pos-' + row + '-' + cell);
             cellEl.attr('class', 'question');
-            cellEl.text(word.question);
+            if (word.pos.vertical) {
+                cellEl.addClass('arrow-bottom')
+            } else {
+                cellEl.addClass('arrow-right')
+            }
+            cellEl.text(word.question + '|' + word.word);
             wordCells(word, function (index, el) {
                 let data = el.data('cell') ? el.data('cell') : {};
                 if (word.pos.vertical) {
@@ -194,61 +227,67 @@
         }
     }
     let wordCells = function (word, callback) {
-        let row = word.pos.row,
+        let row, cell;
+        if (word.origin) {
+            row = word.origin.row;
+            cell = word.origin.cell;
+        } else {
+            row = word.pos.row;
             cell = word.pos.cell;
-        word.pos.vertical ? row++ : cell++;
+            word.pos.vertical ? row++ : cell++;
+        }
         for (let i = 0; i < word.word.length; i++) {
             let el = $('.pos-' + (word.pos.vertical ? ((row + i) + '-' + cell) : (row + '-' + (cell + i))));
             callback(i, el);
         }
     }
     let toggleCell = function (dir) {
-        let pos = currentCell.attr('class').split(' ').filter(
-            el => el.indexOf('pos') > -1
-        )[0].split('-');
-        switch (dir) {
-            case 'next':
-                if (currentWord.pos.vertical) {
-                    setActive($('.pos-' + (+pos[1] + 1) + '-' + pos[2]));
-                } else {
-                    setActive($('.pos-' + pos[1] + '-' + (+pos[2] + 1)));
-                }
-                break;
-            case 'prev':
-                if (currentWord.pos.vertical) {
-                    setActive($('.pos-' + (+pos[1] - 1) + '-' + pos[2]));
+        if (currentWord) {
+            let pos = currentCell.attr('class').split(' ').filter(
+                el => el.indexOf('pos') > -1
+            )[0].split('-');
+            switch (dir) {
+                case 'next':
+                    if (currentWord.pos.vertical) {
+                        setActive($('.pos-' + (+pos[1] + 1) + '-' + pos[2]));
+                    } else {
+                        setActive($('.pos-' + pos[1] + '-' + (+pos[2] + 1)));
+                    }
+                    break;
+                case 'prev':
+                    if (currentWord.pos.vertical) {
+                        setActive($('.pos-' + (+pos[1] - 1) + '-' + pos[2]));
 
-                } else {
-                    setActive($('.pos-' + pos[1] + '-' + (+pos[2] - 1)));
-                }
-                break;
-            case 'first':
-                if (currentWord.pos.vertical) {
-                    setActive($('.pos-' + (+currentWord.pos.row + 1) + '-' + pos[2]));
+                    } else {
+                        setActive($('.pos-' + pos[1] + '-' + (+pos[2] - 1)));
+                    }
+                    break;
+                case 'first':
+                    if (currentWord.pos.vertical) {
+                        setActive($('.pos-' + (+currentWord.pos.row + 1) + '-' + pos[2]));
 
-                } else {
-                    setActive($('.pos-' + pos[1] + '-' + (+currentWord.pos.cell + 1)));
-                }
-                break;
-            case 'last':
-                if (currentWord.pos.vertical) {
-                    setActive($('.pos-' + currentWord.word.length + '-' + pos[2]));
+                    } else {
+                        setActive($('.pos-' + pos[1] + '-' + (+currentWord.pos.cell + 1)));
+                    }
+                    break;
+                case 'last':
+                    if (currentWord.pos.vertical) {
+                        setActive($('.pos-' + currentWord.word.length + '-' + pos[2]));
 
-                } else {
-                    setActive($('.pos-' + pos[1] + '-' + currentWord.word.length));
-                }
-                break;
+                    } else {
+                        setActive($('.pos-' + pos[1] + '-' + currentWord.word.length));
+                    }
+                    break;
+            }
         }
     }
     let activeWord = function () {
         $('.cell').on('click', function (e) {
             var el = $(this),
                 data = el.data('cell');
-            toggleDir(data);
-            $('.cell').removeClass('selected');
-            wordCells(currentWord, function (index, el) {
-                el.addClass('selected');
-            })
+            if (!el.hasClass('selected') || el.hasClass('active')) {
+                toggleDir(data);
+            }
             setActive(el);
         });
     }
@@ -262,10 +301,13 @@
         } else {
             currentWord = data.vertical ? data.vertical.word : data.horizontal.word;
         }
-
+        $('.cell').removeClass('selected');
+        wordCells(currentWord, function (index, el) {
+            el.addClass('selected');
+        })
     }
     let setActive = function (el) {
-        if (el.length && !el.hasClass('done')) {
+        if (el.length) {
             el.addClass('active')
                 .siblings()
                 .removeClass('active');
