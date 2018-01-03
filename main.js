@@ -415,8 +415,7 @@
                     cellEl.addClass('arrow-right');
                 }
             }
-
-            cellEl.text(word.question);
+            cellEl.html('<span>' + word.question + '</span>');
             wordCells(word, function (index, el) {
                 let data = el.data('cell') ? el.data('cell') : {};
                 if (word.pos.vertical) {
@@ -470,17 +469,21 @@
                     break;
                 case 'first':
                     if (currentWord.pos.vertical) {
-                        setActiveCell($('.pos-' + (currentWord.origin ? currentWord.origin.row : currentWord.pos.row + 1) + '-' + pos.cell));
+                        const selector = '.pos-' + getWordPositions(currentWord).start + '-' + pos.cell;
+                        setActiveCell($(selector));
 
                     } else {
-                        setActiveCell($('.pos-' + pos.row + '-' + (currentWord.origin ? currentWord.origin.cell : currentWord.pos.cell + 1)));
+                        const selector =  '.pos-' + pos.row + '-' + getWordPositions(currentWord).start;
+                        setActiveCell($(selector));
                     }
                     break;
                 case 'last':
                     if (currentWord.pos.vertical) {
-                        setActiveCell($('.pos-' + (currentWord.origin ? currentWord.word.length - 1 : currentWord.word.length) + '-' + pos.cell));
+                        const selector = '.pos-' + getWordPositions(currentWord).end + '-' + pos.cell;
+                        setActiveCell($(selector));
                     } else {
-                        setActiveCell($('.pos-' + pos.row + '-' + currentWord.word.length));
+                        const selector = '.pos-' + pos.row + '-' + getWordPositions(currentWord).end;
+                        setActiveCell($(selector));
                     }
                     break;
             }
@@ -495,6 +498,27 @@
             }
             setActiveCell(el);
         });
+    }
+    let getWordPositions = function (word) {
+        let wordPos = {};
+        if (word.origin) {
+            if (word.pos.vertical) {
+                wordPos.start = word.origin.row;
+                wordPos.end = word.origin.row + word.word.length - 1;
+            } else {
+                wordPos.start = word.origin.cell;
+                wordPos.end = word.origin.cell + word.word.length - 1;
+            }
+        } else {
+            if (word.pos.vertical) {
+                wordPos.start = word.pos.row + 1;
+                wordPos.end = word.pos.row + word.word.length;
+            } else {
+                wordPos.start = word.pos.cell + 1;
+                wordPos.end = word.pos.cell + word.word.length;
+            }
+        }
+        return wordPos;
     }
     let toggleDir = function (data) {
         if (data.vertical && data.horizontal) {

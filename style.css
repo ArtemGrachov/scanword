@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+body {
+    background: #f3f3f3;
+}
+
 .container {
     border: 1px dashed grey;
     padding: 20px;
@@ -34,7 +38,16 @@
     background: lightgrey;
     font-size: 10px;
     line-height: inherit;
-    padding: 4px;
+}
+
+.question span {
+    display: table-cell;
+    width: 4rem;
+    height: 4rem;
+    max-width: 4rem;
+    max-height: 4rem;
+    vertical-align: middle;
+    padding: 2px;
 }
 
 .question:before {
