@@ -79,9 +79,11 @@
                     if (e.keyCode == 8 && currentCell.text() == '') {
                         toggleCell('prev');
                     }
-                    currentCell.data('cell').forEach(cell => {
-                        scanword.words[cell.word].answer[cell.index] = null;
-                    });
+                    var cellData = currentCell.data('cell');
+                    for (let key in cellData) {
+                        const data = cellData[key];
+                        data.word.answer[data.index] = null;
+                    }
                     currentCell.text('')
                     break;
                 case 9:
@@ -127,22 +129,21 @@
     }
     let inputWord = function (sym) {
         currentCell.text(sym);
-        let dataArr = currentCell.data('cell');
-        for (let i = 0; i < dataArr.length; i++) {
-            let word = scanword.words[dataArr[i].word],
-                index = dataArr[i].index,
-                answer = word.answer;
+        let data = currentCell.data('cell');
+        for (let key in data) {
+            let wordObj = data[key].word,
+                answer = data[key].word.answer,
+                index = data[key].index;
             answer[index] = sym;
-            if (answer.join('').toLowerCase() == word.word) {
-                setDone(word);
+            if (answer.join('').toLowerCase() == wordObj.word) {
+                setDone(wordObj);
             }
         }
-
         if (currentCell) toggleCell('next');
     }
-    let setDone = function (word) {
-        word.active = false;
-        wordCells(word, function (index, el) {
+    let setDone = function (wordObj) {
+        wordObj.active = false;
+        wordCells(wordObj, function (index, el) {
             el.addClass('done');
         })
         unfocus();
@@ -176,11 +177,18 @@
             cellEl.attr('class', 'question');
             cellEl.text(word.question);
             wordCells(word, function (index, el) {
-                let data = el.data('cell') ? el.data('cell') : [];
-                data.push({
-                    word: key,
-                    index: index
-                });
+                let data = el.data('cell') ? el.data('cell') : {};
+                if (word.pos.vertical) {
+                    data.vertical = {
+                        word: word,
+                        index: index
+                    }
+                } else {
+                    data.horizontal = {
+                        word: word,
+                        index: index
+                    }
+                }
                 el.data('cell', data);
             })
         }
@@ -236,22 +244,16 @@
         $('.cell').on('click', function (e) {
             var el = $(this),
                 data = el.data('cell');
-            if (el.data('cell').length == 1) {
-                currentWord = scanword.words[data[0].word];
-            } else {
-                const word = scanword.words[data[1].word];
-                if (currentWord != word) {
-                    currentWord = word;
-                } else {
-                    currentWord = scanword.words[data[0].word];
-                }
-            }
+            toggleDir(data);
             $('.cell').removeClass('selected');
             wordCells(currentWord, function (index, el) {
                 el.addClass('selected');
             })
             setActive(el);
         });
+    }
+    let toggleDir = function (data) {
+        currentWord = data.horizontal.word;
     }
     let setActive = function (el) {
         if (el.length && !el.hasClass('done')) {
