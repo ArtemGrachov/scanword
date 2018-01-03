@@ -71,12 +71,12 @@
             },
             't6': {
                 question: 't6',
-                word: 'tttt',
+                word: 'e',
                 answer: [],
                 active: true,
                 pos: {
                     cell: 3,
-                    row: 0,
+                    row: 1,
                     vertical: true
                 },
                 origin: {
@@ -102,15 +102,17 @@
                 switch (e.keyCode) {
                     case 8:
                     case 46:
-                        if (e.keyCode == 8 && currentCell.text() == '') {
-                            toggleCell('prev');
+                        if (!currentCell.hasClass('done')) {
+                            if (e.keyCode == 8 && currentCell.text() == '') {
+                                toggleCell('prev');
+                            }
+                            var cellData = currentCell.data('cell');
+                            for (let key in cellData) {
+                                const data = cellData[key];
+                                data.word.answer[data.index] = null;
+                            }
+                            currentCell.text('')
                         }
-                        var cellData = currentCell.data('cell');
-                        for (let key in cellData) {
-                            const data = cellData[key];
-                            data.word.answer[data.index] = null;
-                        }
-                        currentCell.text('')
                         break;
                     case 9:
                         e.preventDefault();
@@ -176,9 +178,6 @@
             el.addClass('done');
         })
     }
-    let removeSym = function (index) {
-        currentWord.answer[index] = null;
-    }
     let buildScanword = function () {
         let scanwordEl = $('#scanword');
         scanwordEl.css({
@@ -203,11 +202,32 @@
                 row = word.pos.row;
             let cellEl = $('.pos-' + row + '-' + cell);
             cellEl.attr('class', 'question');
-            if (word.pos.vertical) {
-                cellEl.addClass('arrow-bottom')
+            if (word.origin) {
+                const origin = word.origin,
+                    pos = word.pos;
+                if (origin.cell > pos.cell) {
+                    cellEl.addClass('arrow-right');
+                } else if (origin.cell < pos.cell) {
+                    cellEl.addClass('arrow-left');
+                }
+                if (origin.row > pos.row) {
+                    cellEl.addClass('arrow-bottom');
+                } else if (origin.row < pos.row) {
+                    cellEl.addClass('arrow-top');
+                }
+                if (word.pos.vertical) {
+                    cellEl.addClass('arrow-vertical');
+                } else {
+                    cellEl.addClass('arrow-horizontal');
+                }
             } else {
-                cellEl.addClass('arrow-right')
+                if (word.pos.vertical) {
+                    cellEl.addClass('arrow-bottom arrow-to-bottom');
+                } else {
+                    cellEl.addClass('arrow-right');
+                }
             }
+
             cellEl.text(word.question + '|' + word.word);
             wordCells(word, function (index, el) {
                 let data = el.data('cell') ? el.data('cell') : {};
