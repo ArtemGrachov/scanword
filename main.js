@@ -253,7 +253,16 @@
         });
     }
     let toggleDir = function (data) {
-        currentWord = data.horizontal.word;
+        if (data.vertical && data.horizontal) {
+            if (currentWord == data.vertical.word) {
+                currentWord = data.horizontal.word;
+            } else {
+                currentWord = data.vertical.word;
+            }
+        } else {
+            currentWord = data.vertical ? data.vertical.word : data.horizontal.word;
+        }
+
     }
     let setActive = function (el) {
         if (el.length && !el.hasClass('done')) {
