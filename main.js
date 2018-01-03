@@ -71,12 +71,12 @@
             },
             't6': {
                 question: 't6',
-                word: 'e',
+                word: 'tttt',
                 answer: [],
                 active: true,
                 pos: {
                     cell: 3,
-                    row: 1,
+                    row: 0,
                     vertical: true
                 },
                 origin: {
@@ -91,6 +91,7 @@
         currentWord = undefined;
     let inputFocus = function () {
         $('#scanword').on('click', function (e) {
+            e.preventDefault();
             $('#inp').focus();
         })
         $('#inp').on('keypress', function (e) {
@@ -126,7 +127,8 @@
                         break;
                     case 37:
                         if (currentWord.pos.vertical) {
-                            console.log('left')
+                            const pos = getCellPos(currentCell);
+                            setActiveWord($('.pos-' + (pos.row) + '-' + (pos.cell - 1)));
                         } else {
                             toggleCell('prev')
                         }
@@ -135,12 +137,14 @@
                         if (currentWord.pos.vertical) {
                             toggleCell('prev')
                         } else {
-                            console.log('up')
+                            const pos = getCellPos(currentCell);
+                            setActiveWord($('.pos-' + (pos.row - 1) + '-' + (pos.cell)));
                         }
                         break;
                     case 39:
                         if (currentWord.pos.vertical) {
-                            console.log('right')
+                            const pos = getCellPos(currentCell);
+                            setActiveWord($('.pos-' + (pos.row) + '-' + (pos.cell + 1)));
                         } else {
                             toggleCell('next')
                         }
@@ -149,7 +153,8 @@
                         if (currentWord.pos.vertical) {
                             toggleCell('next')
                         } else {
-                            console.log('down')
+                            const pos = getCellPos(currentCell);
+                            setActiveWord($('.pos-' + (pos.row + 1) + '-' + (pos.cell)));
                         }
                         break;
                 }
@@ -222,7 +227,7 @@
                 }
             } else {
                 if (word.pos.vertical) {
-                    cellEl.addClass('arrow-bottom arrow-to-bottom');
+                    cellEl.addClass('arrow-bottom arrow-vertical');
                 } else {
                     cellEl.addClass('arrow-right');
                 }
@@ -263,39 +268,36 @@
     }
     let toggleCell = function (dir) {
         if (currentWord) {
-            let pos = currentCell.attr('class').split(' ').filter(
-                el => el.indexOf('pos') > -1
-            )[0].split('-');
+            let pos = getCellPos(currentCell);
             switch (dir) {
                 case 'next':
                     if (currentWord.pos.vertical) {
-                        setActive($('.pos-' + (+pos[1] + 1) + '-' + pos[2]));
+                        setActiveCell($('.pos-' + (pos.row + 1) + '-' + pos.cell));
                     } else {
-                        setActive($('.pos-' + pos[1] + '-' + (+pos[2] + 1)));
+                        setActiveCell($('.pos-' + pos.row + '-' + (+pos.cell + 1)));
                     }
                     break;
                 case 'prev':
                     if (currentWord.pos.vertical) {
-                        setActive($('.pos-' + (+pos[1] - 1) + '-' + pos[2]));
+                        setActiveCell($('.pos-' + (pos.row - 1) + '-' + pos.cell));
 
                     } else {
-                        setActive($('.pos-' + pos[1] + '-' + (+pos[2] - 1)));
+                        setActiveCell($('.pos-' + pos.row + '-' + (pos.cell - 1)));
                     }
                     break;
                 case 'first':
                     if (currentWord.pos.vertical) {
-                        setActive($('.pos-' + (+currentWord.pos.row + 1) + '-' + pos[2]));
+                        setActiveCell($('.pos-' + (currentWord.origin ? currentWord.origin.row : currentWord.pos.row + 1) + '-' + pos.cell));
 
                     } else {
-                        setActive($('.pos-' + pos[1] + '-' + (+currentWord.pos.cell + 1)));
+                        setActiveCell($('.pos-' + pos.row + '-' + (currentWord.origin ? currentWord.origin.cell : currentWord.pos.cell + 1)));
                     }
                     break;
                 case 'last':
                     if (currentWord.pos.vertical) {
-                        setActive($('.pos-' + currentWord.word.length + '-' + pos[2]));
-
+                        setActiveCell($('.pos-' + (currentWord.origin ? currentWord.word.length - 1 : currentWord.word.length) + '-' + pos.cell));
                     } else {
-                        setActive($('.pos-' + pos[1] + '-' + currentWord.word.length));
+                        setActiveCell($('.pos-' + pos.row + '-' + currentWord.word.length));
                     }
                     break;
             }
@@ -308,7 +310,7 @@
             if (!el.hasClass('selected') || el.hasClass('active')) {
                 toggleDir(data);
             }
-            setActive(el);
+            setActiveCell(el);
         });
     }
     let toggleDir = function (data) {
@@ -326,7 +328,7 @@
             el.addClass('selected');
         })
     }
-    let setActive = function (el) {
+    let setActiveCell = function (el) {
         if (el.length) {
             el.addClass('active')
                 .siblings()
@@ -334,10 +336,17 @@
             currentCell = el;
         }
     }
-    let unfocus = function () {
-        $('.cell')
-            .removeClass('selected active')
-        currentWord = undefined;
-        currentCell = undefined;
+    let setActiveWord = function (el) {
+        setActiveCell(el);
+        toggleDir(el.data('cell'));
+    }
+    let getCellPos = function (el) {
+        const pos = el.attr('class').split(' ').filter(
+            cls => cls.indexOf('pos') > -1
+        )[0].split('-');
+        return {
+            row: +pos[1],
+            cell: +pos[2]
+        };
     }
 })()
