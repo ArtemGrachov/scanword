@@ -4,7 +4,7 @@
         buildScanword(scanword);
         activeWord();
     });
-    var scanword = {
+    const scanword = {
         width: 6,
         height: 4,
         words: {
@@ -61,64 +61,122 @@
             }
         }
     }
-    var currentCell = undefined,
-        direction = null;
-    var inputFocus = function () {
+    let currentCell = undefined,
+        currentWord = undefined;
+    let inputFocus = function () {
         $('#scanword').on('click', function (e) {
             $('#inp').focus();
         })
         $('#inp').on('keypress', function (e) {
             e.preventDefault();
-            inputWord(e.key);
+            if (currentCell) inputWord(e.key);
+        })
+        $('#inp').on('keydown', function (e) {
+            console.log(e.keyCode);
+            switch (e.keyCode) {
+                case 8:
+                case 46:
+                    if (e.keyCode == 8 && currentCell.text() == '') {
+                        toggleCell('prev');
+                    }
+                    currentCell.data('cell').forEach(cell => {
+                        scanword.words[cell.word].answer[cell.index] = null;
+                    });
+                    currentCell.text('')
+                    break;
+                case 9:
+                    console.log(currentCell);
+                    console.log(currentWord);
+                    break;
+                case 35:
+                    toggleCell('last');
+                    break;
+                case 36:
+                    toggleCell('first');
+                    break;
+                case 37:
+                    if (currentWord.pos.vertical) {
+                        console.log('left')
+                    } else {
+                        toggleCell('prev')
+                    }
+                    break;
+                case 38:
+                    if (currentWord.pos.vertical) {
+                        toggleCell('prev')
+                    } else {
+                        console.log('up')
+                    }
+                    break;
+                case 39:
+                    if (currentWord.pos.vertical) {
+                        console.log('right')
+                    } else {
+                        toggleCell('next')
+                    }
+                    break;
+                case 40:
+                    if (currentWord.pos.vertical) {
+                        toggleCell('next')
+                    } else {
+                        console.log('down')
+                    }
+                    break;
+            }
         })
     }
-    var inputWord = function (sym) {
+    let inputWord = function (sym) {
         currentCell.text(sym);
-        var dataArr = currentCell.data('cell');
-        for (var i = 0; i < dataArr.length; i++) {
-            var word = scanword.words[dataArr[i].word],
+        let dataArr = currentCell.data('cell');
+        for (let i = 0; i < dataArr.length; i++) {
+            let word = scanword.words[dataArr[i].word],
                 index = dataArr[i].index,
                 answer = word.answer;
-
             answer[index] = sym;
-            if (answer.join('') == word.word) {
-                setDone(word)
+            if (answer.join('').toLowerCase() == word.word) {
+                setDone(word);
             }
         }
+
+        if (currentCell) toggleCell('next');
     }
-    var setDone = function (word) {
+    let setDone = function (word) {
         word.active = false;
         wordCells(word, function (index, el) {
             el.addClass('done');
         })
+        unfocus();
     }
-    var buildScanword = function () {
-        var scanwordEl = $('#scanword');
+    let removeSym = function (index) {
+        currentWord.answer[index] = null;
+    }
+    let buildScanword = function () {
+        let scanwordEl = $('#scanword');
         scanwordEl.css({
             'width': 3 * scanword.width + 'rem',
             'height': 3 * scanword.height + 'rem'
         })
-        var row = 0,
+        let row = 0,
             cell = 0;
-        for (var i = 0; i < scanword.width * scanword.height; i++) {
-            var cellEl = $('<div class="cell"></div>').appendTo('#scanword');
-            cellEl.addClass(row + '-' + cell);
+        for (let i = 0; i < scanword.width * scanword.height; i++) {
+            let cellEl = $('<a href="#" class="cell"></a>').appendTo('#scanword');
+            cellEl.addClass('pos-' + row + '-' + cell);
             cell++;
             if (cell >= scanword.width) {
                 row++;
                 cell = 0;
             }
         }
-        var words = scanword.words;
-        for (var key in words) {
-            var word = words[key];
-            var cell = word.pos.cell,
+        let words = scanword.words;
+        for (let key in words) {
+            let word = words[key];
+            let cell = word.pos.cell,
                 row = word.pos.row;
-            var cellEl = $('.' + row + '-' + cell);
-            cellEl.addClass('question');
+            let cellEl = $('.pos-' + row + '-' + cell);
+            cellEl.attr('class', 'question');
             cellEl.text(word.question);
             wordCells(word, function (index, el) {
-                var data = el.data('cell') ? el.data('cell') : [];
+                let data = el.data('cell') ? el.data('cell') : [];
                 data.push({
                     word: key,
                     index: index
@@ -127,22 +185,86 @@
             })
         }
     }
-    var wordCells = function (word, callback) {
-        var row = word.pos.row,
+    let wordCells = function (word, callback) {
+        let row = word.pos.row,
             cell = word.pos.cell;
         word.pos.vertical ? row++ : cell++;
-        for (var i = 0; i < word.word.length; i++) {
-            var el = $('.' + (word.pos.vertical ? ((row + i) + '-' + cell) : (row + '-' + (cell + i))));
+        for (let i = 0; i < word.word.length; i++) {
+            let el = $('.pos-' + (word.pos.vertical ? ((row + i) + '-' + cell) : (row + '-' + (cell + i))));
             callback(i, el);
         }
     }
-    var activeWord = function () {
+    let toggleCell = function (dir) {
+        let pos = currentCell.attr('class').split(' ').filter(
+            el => el.indexOf('pos') > -1
+        )[0].split('-');
+        switch (dir) {
+            case 'next':
+                if (currentWord.pos.vertical) {
+                    setActive($('.pos-' + (+pos[1] + 1) + '-' + pos[2]));
+                } else {
+                    setActive($('.pos-' + pos[1] + '-' + (+pos[2] + 1)));
+                }
+                break;
+            case 'prev':
+                if (currentWord.pos.vertical) {
+                    setActive($('.pos-' + (+pos[1] - 1) + '-' + pos[2]));
+
+                } else {
+                    setActive($('.pos-' + pos[1] + '-' + (+pos[2] - 1)));
+                }
+                break;
+            case 'first':
+                if (currentWord.pos.vertical) {
+                    setActive($('.pos-' + (+currentWord.pos.row + 1) + '-' + pos[2]));
+
+                } else {
+                    setActive($('.pos-' + pos[1] + '-' + (+currentWord.pos.cell + 1)));
+                }
+                break;
+            case 'last':
+                if (currentWord.pos.vertical) {
+                    setActive($('.pos-' + currentWord.word.length + '-' + pos[2]));
+
+                } else {
+                    setActive($('.pos-' + pos[1] + '-' + currentWord.word.length));
+                }
+                break;
+        }
+    }
+    let activeWord = function () {
         $('.cell').on('click', function (e) {
-            $(this)
-                .addClass('active')
+            var el = $(this),
+                data = el.data('cell');
+            if (el.data('cell').length == 1) {
+                currentWord = scanword.words[data[0].word];
+            } else {
+                const word = scanword.words[data[1].word];
+                if (currentWord != word) {
+                    currentWord = word;
+                } else {
+                    currentWord = scanword.words[data[0].word];
+                }
+            }
+            $('.cell').removeClass('selected');
+            wordCells(currentWord, function (index, el) {
+                el.addClass('selected');
+            })
+            setActive(el);
+        });
+    }
+    let setActive = function (el) {
+        if (el.length && !el.hasClass('done')) {
+            el.addClass('active')
                 .siblings()
                 .removeClass('active');
-            currentCell = $(this);
-        });
+            currentCell = el;
+        }
+    }
+    let unfocus = function () {
+        $('.cell')
+            .removeClass('selected active')
+        currentWord = undefined;
+        currentCell = undefined;
     }
 })()
