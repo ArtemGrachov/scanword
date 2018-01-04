@@ -44,6 +44,35 @@
     });
     const Scanword = function (words) {
         this.words = words;
+        // const size = this.words.reduce(function (prev, curr, index) {
+        //     let currRight = 0,
+        //         currBottom = 0;
+        //     if (curr.origin) {
+        //         if (curr.pos.vertical) {
+        //             currRight = curr.origin.cell;
+        //             currBottom = curr.origin.row + curr.word.length;
+        //         } else {
+        //             currRight = curr.origin.cell + curr.word.length;
+        //             currBottom = curr.origin.row;
+        //         }
+        //     } else {
+        //         if (curr.pos.vertical) {
+        //             currRight = curr.pos.cell + curr.pos.length + 1;
+        //             currBottom = curr.pos.row;
+        //         } else {
+        //             currRight = curr.pos.cell;
+        //             currBottom = curr.pos.row + curr.pos.length + 1;
+        //         }
+        //     }
+        //     prev.width = currRight > prev.width ? currRight : prev.width;
+        //     prev.height = currBottom > prev.height ? currBottom : prev.height;
+        //     console.log(prev, curr, index);
+        //     return prev;
+        // }, {
+        //     width: 1,
+        //     height: 2
+        // })
+        // console.log(size);
         // width and length are temporary
         this.width = 10;
         this.height = 12;
@@ -139,44 +168,25 @@
         },
         wordIterateCells: function (word, callback) {
             const _this = this;
-            let row, cell;
-            if (word.origin) {
-                row = word.origin.row;
-                cell = word.origin.cell;
-            } else {
-                row = word.pos.row;
-                cell = word.pos.cell;
-                word.pos.vertical ? row++ : cell++;
-            }
             for (let i = 0; i < word.word.length; i++) {
                 let pos = word.pos.vertical ? {
-                    cell: cell,
-                    row: row + i
+                    cell: word.pos.cell,
+                    row: word.pos.row + i
                 } : {
-                    cell: cell + i,
-                    row: row
+                    cell: word.pos.cell + i,
+                    row: word.pos.row
                 };
                 callback(i, _this.cellByPos(pos.cell, pos.row));
             }
         },
         wordGetPositions: function (word) {
             let wordPos = {};
-            if (word.origin) {
-                if (word.pos.vertical) {
-                    wordPos.start = word.origin.row;
-                    wordPos.end = word.origin.row + word.word.length - 1;
-                } else {
-                    wordPos.start = word.origin.cell;
-                    wordPos.end = word.origin.cell + word.word.length - 1;
-                }
+            if (word.pos.vertical) {
+                wordPos.start = word.pos.row;
+                wordPos.end = word.pos.row + word.word.length - 1;
             } else {
-                if (word.pos.vertical) {
-                    wordPos.start = word.pos.row + 1;
-                    wordPos.end = word.pos.row + word.word.length;
-                } else {
-                    wordPos.start = word.pos.cell + 1;
-                    wordPos.end = word.pos.cell + word.word.length;
-                }
+                wordPos.start = word.pos.cell;
+                wordPos.end = word.pos.cell + word.word.length - 1;
             }
             return wordPos;
         },
@@ -222,19 +232,7 @@
             const _this = this,
                 word = qCell.data('cell');
             _this.wordSetActive(word);
-            let pos;
-            if (word.origin) {
-                pos = {
-                    row: word.origin.row,
-                    cell: word.origin.cell
-                }
-            } else {
-                pos = {
-                    row: word.pos.vertical ? word.pos.row + 1 : word.pos.row,
-                    cell: word.pos.vertical ? word.pos.cell : word.pos.cell + 1
-                }
-            }
-            _this.cellSetActive(_this.cellByPos(pos.cell, pos.row));
+            _this.cellSetActive(_this.cellByPos(word.pos.cell, word.pos.row));
         },
         symAdd: function (sym) {
             const _this = this;
@@ -308,23 +306,28 @@
                 }
                 let words = scanword.words;
                 for (let key in words) {
-                    let word = words[key],
-                        cell = word.pos.cell,
-                        row = word.pos.row;
-                    let qEl = _this.cellByPos(cell, row);
+                    const word = words[key],
+                        qPos = word.qPos ? {
+                            cell: word.qPos.cell,
+                            row: word.qPos.row
+                        } : {
+                            cell: word.pos.cell,
+                            row: word.pos.row
+                        };
+                    let qEl = _this.cellByPos(qPos.cell, qPos.row);
                     qEl.addClass(_this.selectors.class.question);
                     qEl.data('cell', word)
-                    if (word.origin) {
-                        const origin = word.origin,
+                    if (word.qPos) {
+                        const qPos = word.qPos,
                             pos = word.pos;
-                        if (origin.cell > pos.cell) {
+                        if (pos.cell > qPos.cell) {
                             qEl.addClass('arrow-right');
-                        } else if (origin.cell < pos.cell) {
+                        } else if (pos.cell < qPos.cell) {
                             qEl.addClass('arrow-left');
                         }
-                        if (origin.row > pos.row) {
+                        if (pos.row > qPos.row) {
                             qEl.addClass('arrow-bottom');
-                        } else if (origin.row < pos.row) {
+                        } else if (pos.row < qPos.row) {
                             qEl.addClass('arrow-top');
                         }
                         if (word.pos.vertical) {
@@ -340,6 +343,13 @@
                         }
                     }
                     qEl.html('<span>' + word.question + '</span>');
+                    if (!word.qPos) {
+                        if (word.pos.vertical) {
+                            word.pos.row++;
+                        } else {
+                            word.pos.cell++;
+                        }
+                    }
                     _this.wordIterateCells(word, function (index, el) {
                         let data = el.data('cell') ? el.data('cell') : {};
                         if (word.pos.vertical) {
@@ -439,8 +449,8 @@
     const Word = function (word) {
         this.question = word.question;
         this.word = word.word;
+        word.qPos ? this.qPos = word.qPos : null;
         this.pos = word.pos;
-        word.origin ? this.origin = word.origin : null;
         this.answer = [];
         this.active = true;
     }

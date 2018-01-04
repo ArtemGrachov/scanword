@@ -1,1 +1,290 @@
-{"words":[{"question":"Удар в бильярде","word":"эффе","pos":{"cell":0,"row":0,"vertical":true},"origin":{"cell":1,"row":0}},{"question":"Фракийский царь, союзник троянцев","word":"рес","pos":{"cell":2,"row":0,"vertical":true}},{"question":"Недотепа, лопух","word":"растяпа","pos":{"cell":4,"row":0,"vertical":true},"origin":{"cell":3,"row":0}},{"question":"Река в горах Южной Сибири","word":"казыр","pos":{"cell":5,"row":0,"vertical":true}},{"question":"Жалящее насекомое","word":"оса","pos":{"cell":6,"row":0,"vertical":true}},{"question":"Правый приток Енисея","word":"ус","pos":{"cell":7,"row":0},"origin":{"cell":8,"row":1}},{"question":"Что лечит отиатр?","word":"ухо","pos":{"cell":8,"row":0,"vertical":true}},{"question":"Эмблема, знак","word":"символ","pos":{"cell":9,"row":0,"vertical":true}},{"question":"Украинский писатель","word":"франко","pos":{"cell":0,"row":1}},{"question":"Женское имя","word":"алена","pos":{"cell":7,"row":1,"vertical":true}},{"question":"Город в Марокко","word":"фес","pos":{"cell":0,"row":2}},{"question":"Гора на острове Хоккайдо","word":"асахи","pos":{"cell":4,"row":2}},{"question":"Древний город на Крите","word":"фест","pos":{"cell":0,"row":4},"origin":{"cell":0,"row":3}},{"question":"Сорт сельди","word":"залом","pos":{"cell":4,"row":3}},{"question":"Музей в Санкт-Петербурге","word":"эрмитаж","pos":{"cell":1,"row":4,"vertical":true}},{"question":"Музыкальный звук","word":"си","pos":{"cell":2,"row":4,"vertical":true}},{"question":"Спутник Сатурна","word":"елена","pos":{"cell":4,"row":4,"vertical":true}},{"question":"Мужское имя","word":"аким","pos":{"cell":6,"row":4,"vertical":true}},{"question":"Червь класса нематод","word":"трихина","pos":{"cell":8,"row":4,"vertical":true}},{"question":"Искусственный язык","word":"эсперанто","pos":{"cell":0,"row":5}},{"question":"Дисциплина в мотоциклетном спорте","word":"триал","pos":{"cell":0,"row":7},"origin":{"cell":0,"row":6}},{"question":"Имя французских королей","word":"карл","pos":{"cell":5,"row":6}},{"question":"Одежда священника","word":"риза","pos":{"cell":2,"row":7,"vertical":true}},{"question":"Оросительный канал","word":"арык","pos":{"cell":3,"row":7,"vertical":true}},{"question":"Насекомое отряда двухкрылых","word":"муха","pos":{"cell":5,"row":7},"origin":{"cell":6,"row":8}},{"question":"Часть комнаты, сдаваемая в наем","word":"угол","pos":{"cell":7,"row":7,"vertical":true}},{"question":"Древневосточный бог грозы","word":"адад","pos":{"cell":9,"row":7,"vertical":true}},{"question":"Страна в Азии","word":"иран","pos":{"cell":0,"row":8}},{"question":"Единица яркости","word":"нит","pos":{"cell":5,"row":8,"vertical":true}},{"question":"Экскурсовод","word":"гид","pos":{"cell":6,"row":9}},{"question":"Жестокий, властный человек","word":"тиран","pos":{"cell":0,"row":9}},{"question":"Основа","word":"азы","pos":{"cell":0,"row":10}},{"question":"Изорбражение бога, святых","word":"икона","pos":{"cell":4,"row":10}},{"question":"Короткая верхняя одежда","word":"жакет","pos":{"cell":0,"row":11}},{"question":"Согласие, мир, порядок","word":"лад","pos":{"cell":6,"row":11}}]}
+{
+    "words": [{
+        "question": "Удар в бильярде",
+        "word": "эффе",
+        "pos": {
+            "cell": 1,
+            "row": 0,
+            "vertical": true
+        },
+        "qPos": {
+            "cell": 0,
+            "row": 0
+        }
+    }, {
+        "question": "Фракийский царь, союзник троянцев",
+        "word": "рес",
+        "pos": {
+            "cell": 2,
+            "row": 0,
+            "vertical": true
+        }
+    }, {
+        "question": "Недотепа, лопух",
+        "word": "растяпа",
+        "pos": {
+            "cell": 3,
+            "row": 0,
+            "vertical": true
+        },
+        "qPos": {
+            "cell": 4,
+            "row": 0
+        }
+    }, {
+        "question": "Река в горах Южной Сибири",
+        "word": "казыр",
+        "pos": {
+            "cell": 5,
+            "row": 0,
+            "vertical": true
+        }
+    }, {
+        "question": "Жалящее насекомое",
+        "word": "оса",
+        "pos": {
+            "cell": 6,
+            "row": 0,
+            "vertical": true
+        }
+    }, {
+        "question": "Правый приток Енисея",
+        "word": "ус",
+        "pos": {
+            "cell": 8,
+            "row": 1
+        },
+        "qPos": {
+            "cell": 7,
+            "row": 0
+        }
+    }, {
+        "question": "Что лечит отиатр?",
+        "word": "ухо",
+        "pos": {
+            "cell": 8,
+            "row": 0,
+            "vertical": true
+        }
+    }, {
+        "question": "Эмблема, знак",
+        "word": "символ",
+        "pos": {
+            "cell": 9,
+            "row": 0,
+            "vertical": true
+        }
+    }, {
+        "question": "Украинский писатель",
+        "word": "франко",
+        "pos": {
+            "cell": 0,
+            "row": 1
+        }
+    }, {
+        "question": "Женское имя",
+        "word": "алена",
+        "pos": {
+            "cell": 7,
+            "row": 1,
+            "vertical": true
+        }
+    }, {
+        "question": "Город в Марокко",
+        "word": "фес",
+        "pos": {
+            "cell": 0,
+            "row": 2
+        }
+    }, {
+        "question": "Гора на острове Хоккайдо",
+        "word": "асахи",
+        "pos": {
+            "cell": 4,
+            "row": 2
+        }
+    }, {
+        "question": "Древний город на Крите",
+        "word": "фест",
+        "pos": {
+            "cell": 0,
+            "row": 3
+        },
+        "qPos": {
+            "cell": 0,
+            "row": 4
+        }
+    }, {
+        "question": "Сорт сельди",
+        "word": "залом",
+        "pos": {
+            "cell": 4,
+            "row": 3
+        }
+    }, {
+        "question": "Музей в Санкт-Петербурге",
+        "word": "эрмитаж",
+        "pos": {
+            "cell": 1,
+            "row": 4,
+            "vertical": true
+        }
+    }, {
+        "question": "Музыкальный звук",
+        "word": "си",
+        "pos": {
+            "cell": 2,
+            "row": 4,
+            "vertical": true
+        }
+    }, {
+        "question": "Спутник Сатурна",
+        "word": "елена",
+        "pos": {
+            "cell": 4,
+            "row": 4,
+            "vertical": true
+        }
+    }, {
+        "question": "Мужское имя",
+        "word": "аким",
+        "pos": {
+            "cell": 6,
+            "row": 4,
+            "vertical": true
+        }
+    }, {
+        "question": "Червь класса нематод",
+        "word": "трихина",
+        "pos": {
+            "cell": 8,
+            "row": 4,
+            "vertical": true
+        }
+    }, {
+        "question": "Искусственный язык",
+        "word": "эсперанто",
+        "pos": {
+            "cell": 0,
+            "row": 5
+        }
+    }, {
+        "question": "Дисциплина в мотоциклетном спорте",
+        "word": "триал",
+        "pos": {
+            "cell": 0,
+            "row": 6
+        },
+        "qPos": {
+            "cell": 0,
+            "row": 7
+        }
+    }, {
+        "question": "Имя французских королей",
+        "word": "карл",
+        "pos": {
+            "cell": 5,
+            "row": 6
+        }
+    }, {
+        "question": "Одежда священника",
+        "word": "риза",
+        "pos": {
+            "cell": 2,
+            "row": 7,
+            "vertical": true
+        }
+    }, {
+        "question": "Оросительный канал",
+        "word": "арык",
+        "pos": {
+            "cell": 3,
+            "row": 7,
+            "vertical": true
+        }
+    }, {
+        "question": "Насекомое отряда двухкрылых",
+        "word": "муха",
+        "pos": {
+            "cell": 6,
+            "row": 8
+        },
+        "qPos": {
+            "cell": 5,
+            "row": 7
+        }
+    }, {
+        "question": "Часть комнаты, сдаваемая в наем",
+        "word": "угол",
+        "pos": {
+            "cell": 7,
+            "row": 7,
+            "vertical": true
+        }
+    }, {
+        "question": "Древневосточный бог грозы",
+        "word": "адад",
+        "pos": {
+            "cell": 9,
+            "row": 7,
+            "vertical": true
+        }
+    }, {
+        "question": "Страна в Азии",
+        "word": "иран",
+        "pos": {
+            "cell": 0,
+            "row": 8
+        }
+    }, {
+        "question": "Единица яркости",
+        "word": "нит",
+        "pos": {
+            "cell": 5,
+            "row": 8,
+            "vertical": true
+        }
+    }, {
+        "question": "Экскурсовод",
+        "word": "гид",
+        "pos": {
+            "cell": 6,
+            "row": 9
+        }
+    }, {
+        "question": "Жестокий, властный человек",
+        "word": "тиран",
+        "pos": {
+            "cell": 0,
+            "row": 9
+        }
+    }, {
+        "question": "Основа",
+        "word": "азы",
+        "pos": {
+            "cell": 0,
+            "row": 10
+        }
+    }, {
+        "question": "Изорбражение бога, святых",
+        "word": "икона",
+        "pos": {
+            "cell": 4,
+            "row": 10
+        }
+    }, {
+        "question": "Короткая верхняя одежда",
+        "word": "жакет",
+        "pos": {
+            "cell": 0,
+            "row": 11
+        }
+    }, {
+        "question": "Согласие, мир, порядок",
+        "word": "лад",
+        "pos": {
+            "cell": 6,
+            "row": 11
+        }
+    }]
+}
