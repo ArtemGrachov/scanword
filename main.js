@@ -3,7 +3,7 @@
     const loadScanwords = function () {
         return new Promise(function (resolve, reject) {
             let xhr = new XMLHttpRequest();
-            xhr.open('GET', '/data/sc.json', true);
+            xhr.open('GET', '/data/sc2.json', true);
             xhr.onreadystatechange = function () {
                 if (this.readyState == 4) {
                     if (this.status == 200) {
@@ -19,7 +19,7 @@
     $(document).ready(function () {
         loadScanwords()
             .then(res => {
-                scanword = new Scanword(res.words.map(
+                scanword = new Scanword(res.map(
                     obj => new Word(obj)
                 ));
                 scanword.init({
@@ -44,38 +44,29 @@
     });
     const Scanword = function (words) {
         this.words = words;
-        // const size = this.words.reduce(function (prev, curr, index) {
-        //     let currRight = 0,
-        //         currBottom = 0;
-        //     if (curr.origin) {
-        //         if (curr.pos.vertical) {
-        //             currRight = curr.origin.cell;
-        //             currBottom = curr.origin.row + curr.word.length;
-        //         } else {
-        //             currRight = curr.origin.cell + curr.word.length;
-        //             currBottom = curr.origin.row;
-        //         }
-        //     } else {
-        //         if (curr.pos.vertical) {
-        //             currRight = curr.pos.cell + curr.pos.length + 1;
-        //             currBottom = curr.pos.row;
-        //         } else {
-        //             currRight = curr.pos.cell;
-        //             currBottom = curr.pos.row + curr.pos.length + 1;
-        //         }
-        //     }
-        //     prev.width = currRight > prev.width ? currRight : prev.width;
-        //     prev.height = currBottom > prev.height ? currBottom : prev.height;
-        //     console.log(prev, curr, index);
-        //     return prev;
-        // }, {
-        //     width: 1,
-        //     height: 2
-        // })
-        // console.log(size);
-        // width and length are temporary
-        this.width = 10;
-        this.height = 12;
+        const size = this.words.reduce(function (prev, curr, index) {
+            let width = 0,
+                height = 0;
+            if (curr.pos.vertical) {
+                width = curr.pos.cell + 1;
+                height = curr.pos.row + curr.word.length;
+            } else {
+                width = curr.pos.cell + curr.word.length;
+                height = curr.pos.row + 1;
+            }
+            if (curr.qPos) {
+                width = width < curr.qPos.cell ? curr.qPos.cell : width;
+                height = height < curr.qPos.row ? curr.qPos.row : height;
+            }
+            prev.width = prev.width < width ? width : prev.width;
+            prev.height = prev.height < height ? height : prev.height;
+            return prev;
+        }, {
+            width: 0,
+            height: 0
+        })
+        this.width = size.width;
+        this.height = size.height;
         this.done = 0;
         this.currentCell = undefined;
         this.currentWord = undefined;

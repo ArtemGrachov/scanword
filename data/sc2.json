@@ -1,0 +1,326 @@
+[{
+        "question": "... Терешкова",
+        "word": "валентина",
+        "pos": {
+            "cell": 0,
+            "row": 1
+        },
+        "qPos": {
+            "cell": 0,
+            "row": 0
+        }
+    },
+    {
+        "question": "Знаменательная ...",
+        "word": "дата",
+        "pos": {
+            "cell": 1,
+            "row": 0,
+            "vertical": true
+        },
+        "qPos": {
+            "cell": 2,
+            "row": 0
+        }
+    },
+    {
+        "question": "Наследственность",
+        "word": "ген",
+        "pos": {
+            "cell": 3,
+            "row": 0,
+            "vertical": true
+        },
+        "qPos": {
+            "cell": 4,
+            "row": 0
+        }
+    },
+    {
+        "question": "Информац. телепередача",
+        "word": "итоги",
+        "pos": {
+            "cell": 5,
+            "row": 0,
+            "vertical": true
+        },
+        "qPos": {
+            "cell": 6,
+            "row": 0
+        }
+    },
+    {
+        "question": "... Барбюс",
+        "word": "анри",
+        "pos": {
+            "cell": 7,
+            "row": 0,
+            "vertical": true
+        },
+        "qPos": {
+            "cell": 8,
+            "row": 0
+        }
+    },
+    {
+        "question": "Герда и ...",
+        "word": "каи",
+        "pos": {
+            "cell": 0,
+            "row": 3
+        },
+        "qPos": {
+            "cell": 0,
+            "row": 2
+        }
+    },
+    {
+        "question": "Троя",
+        "word": "илион",
+        "pos": {
+            "cell": 2,
+            "row": 2,
+            "vertical": true
+        }
+    },
+    {
+        "question": "Местоимение 3 лица",
+        "word": "она",
+        "pos": {
+            "cell": 4,
+            "row": 2,
+            "vertical": true
+        }
+    },
+    {
+        "question": "... Фрейндлих",
+        "word": "алиса",
+        "pos": {
+            "cell": 6,
+            "row": 2,
+            "vertical": true
+        }
+    },
+    {
+        "question": "Костяк",
+        "word": "остов",
+        "pos": {
+            "cell": 8,
+            "row": 2,
+            "vertical": true
+        }
+    },
+    {
+        "question": "Штат в США",
+        "word": "огаио",
+        "pos": {
+            "cell": 3,
+            "row": 3
+        }
+    },
+    {
+        "question": "Финансовый ...",
+        "word": "кризис",
+        "pos": {
+            "cell": 0,
+            "row": 3,
+            "vertical": true
+        },
+        "qPos": {
+            "cell": 1,
+            "row": 4
+        }
+    },
+    {
+        "question": "Крупная река в Африке",
+        "word": "нил",
+        "pos": {
+            "cell": 3,
+            "row": 4
+        }
+    },
+    {
+        "question": "Род",
+        "word": "клан",
+        "pos": {
+            "cell": 7,
+            "row": 4,
+            "vertical": true
+        }
+    },
+    {
+        "question": "Акцент стиха",
+        "word": "икт",
+        "pos": {
+            "cell": 5,
+            "row": 5
+        }
+    },
+    {
+        "question": "Осирис и ...",
+        "word": "исида",
+        "pos": {
+            "cell": 0,
+            "row": 5
+        },
+        "qPos": {
+            "cell": 1,
+            "row": 6
+        }
+    },
+    {
+        "question": "Др. армянский город",
+        "word": "ани",
+        "pos": {
+            "cell": 3,
+            "row": 6,
+            "vertical": true
+        }
+    },
+    {
+        "question": "Норвегия",
+        "word": "осло",
+        "pos": {
+            "cell": 4,
+            "row": 6
+        }
+    },
+    {
+        "question": "Эстонский композитор",
+        "word": "аав",
+        "pos": {
+            "cell": 5,
+            "row": 7
+        }
+    },
+    {
+        "question": "Мужское имя",
+        "word": "игнат",
+        "pos": {
+            "cell": 0,
+            "row": 7
+        },
+        "qPos": {
+            "cell": 1,
+            "row": 8
+        }
+    },
+    {
+        "question": "Рекламный газ",
+        "word": "неон",
+        "pos": {
+            "cell": 2,
+            "row": 8,
+            "vertical": true
+        }
+    },
+    {
+        "question": "Тетрадный ...",
+        "word": "лист",
+        "pos": {
+            "cell": 4,
+            "row": 8,
+            "vertical": true
+        }
+    },
+    {
+        "question": "Вымысел",
+        "word": "миф",
+        "pos": {
+            "cell": 5,
+            "row": 8,
+            "vertical": true
+        },
+        "qPos": {
+            "cell": 6,
+            "row": 8
+        }
+    }, {
+        "question": "Далай-...",
+        "word": "лама",
+        "pos": {
+            "cell": 8,
+            "row": 8,
+            "vertical": true
+        }
+    }, {
+        "question": "Краситель",
+        "word": "анилин",
+        "pos": {
+            "cell": 0,
+            "row": 9
+        }
+    }, {
+        "question": "Буква греческого алфавита",
+        "word": "ро",
+        "pos": {
+            "cell": 7,
+            "row": 9,
+            "vertical": true
+        }
+    }, {
+        "question": "маникюр",
+        "word": "лак",
+        "pos": {
+            "cell": 0,
+            "row": 10,
+            "vertical": true
+        },
+        "qPos": {
+            "cell": 1,
+            "row": 10
+        }
+    }, {
+        "question": "\"Узник замка ...\"",
+        "word": "иф",
+        "pos": {
+            "cell": 3,
+            "row": 10
+        }
+    }, {
+        "question": "Лодка Хейердала",
+        "word": "ра",
+        "pos": {
+            "cell": 6,
+            "row": 10
+        }
+    }, {
+        "question": "Книга",
+        "word": "том",
+        "pos": {
+            "cell": 5,
+            "row": 11
+        }
+    }, {
+        "question": "объявление",
+        "word": "анонс",
+        "pos": {
+            "cell": 0,
+            "row": 11
+        },
+        "qPos": {
+            "cell": 1,
+            "row": 12
+
+        }
+    }, {
+        "question": "Римский император",
+        "word": "тит",
+        "pos": {
+            "cell": 3,
+            "row": 12
+        }
+    }, {
+        "question": "Токарев",
+        "word": "тт",
+        "pos": {
+            "cell": 6,
+            "row": 11,
+            "vertical": true
+        },
+        "qPos": {
+            "cell": 7,
+            "row": 12
+        }
+    }
+]
