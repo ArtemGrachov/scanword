@@ -3,12 +3,15 @@
         inputFocus();
         buildScanword(scanword);
         activeWord();
+        $('#total').text(scanword.words.length);
+        $('#done').text(scanword.done);
     });
     const Scanword = function (words, width, height) {
         this.words = words;
         // width and length are temporary
         this.width = width;
         this.height = height;
+        this.done = 0;
     }
     const Word = function (question, word, pos, origin) {
         this.question = question;
@@ -269,6 +272,7 @@
             }
         }
     }
+
     const scanword = scanword1;
     let currentCell = undefined,
         currentWord = undefined;
@@ -355,6 +359,11 @@
     }
     let setDone = function (wordObj) {
         wordObj.active = false;
+        scanword.done++;
+        $('#done').text(scanword.done);
+        if (scanword.done == scanword.words.length) {
+            $('.counter').addClass('done');
+        }
         wordCells(wordObj, function (index, el) {
             el.addClass('done');
         })
@@ -499,6 +508,7 @@
     }
     let activeWord = function () {
         $('.cell').on('click', function (e) {
+            e.preventDefault();
             var el = $(this),
                 data = el.data('cell');
             if (!el.hasClass('question') && (!el.hasClass('selected') || el.hasClass('active'))) {
