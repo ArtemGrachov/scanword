@@ -1,279 +1,52 @@
-(function () {
-    $(document).ready(function () {
-        inputFocus();
-        buildScanword(scanword);
-        activeWord();
-        $('#total').text(scanword.words.length);
-        $('#done').text(scanword.done);
-    });
-    const Scanword = function (words, width, height) {
-        this.words = words;
-        // width and length are temporary
-        this.width = width;
-        this.height = height;
-        this.done = 0;
-    }
-    const Word = function (question, word, pos, origin) {
-        this.question = question;
-        this.word = word;
-        this.pos = pos;
-        origin ? this.origin = origin : null;
-        this.answer = [];
-        this.active = true;
-    }
-    const scanword1 = new Scanword([
-        new Word('Удар в бильярде', 'эффе', {
-            cell: 0,
-            row: 0,
-            vertical: true
-        }, {
-            cell: 1,
-            row: 0
-        }),
-        new Word('Фракийский царь, союзник троянцев', 'рес', {
-            cell: 2,
-            row: 0,
-            vertical: true
-        }),
-        new Word('Недотепа, лопух', 'растяпа', {
-            cell: 4,
-            row: 0,
-            vertical: true
-        }, {
-            cell: 3,
-            row: 0
-        }),
-        new Word('Река в горах Южной Сибири', 'казыр', {
-            cell: 5,
-            row: 0,
-            vertical: true
-        }),
-        new Word('Жалящее насекомое', 'оса', {
-            cell: 6,
-            row: 0,
-            vertical: true
-        }),
-        new Word('Правый приток Енисея', 'ус', {
-            cell: 7,
-            row: 0
-        }, {
-            cell: 8,
-            row: 1
-        }),
-        new Word('Что лечит отиатр?', 'ухо', {
-            cell: 8,
-            row: 0,
-            vertical: true
-        }),
-        new Word('Эмблема, знак', 'символ', {
-            cell: 9,
-            row: 0,
-            vertical: true
-        }),
-        new Word('Украинский писатель', 'франко', {
-            cell: 0,
-            row: 1
-        }),
-        new Word('Женское имя', 'алена', {
-            cell: 7,
-            row: 1,
-            vertical: true
-        }),
-        new Word('Город в Марокко', 'фес', {
-            cell: 0,
-            row: 2
-        }),
-        new Word('Гора на острове Хоккайдо', 'асахи', {
-            cell: 4,
-            row: 2
-        }),
-        new Word('Древний город на Крите', 'фест', {
-            cell: 0,
-            row: 4
-        }, {
-            cell: 0,
-            row: 3
-        }),
-        new Word('Сорт сельди', 'залом', {
-            cell: 4,
-            row: 3
-        }),
-        new Word('Музей в Санкт-Петербурге', 'эрмитаж', {
-            cell: 1,
-            row: 4,
-            vertical: true
-        }),
-        new Word('Музыкальный звук', 'си', {
-            cell: 2,
-            row: 4,
-            vertical: true
-        }),
-        new Word('Спутник Сатурна', 'елена', {
-            cell: 4,
-            row: 4,
-            vertical: true
-        }),
-        new Word('Мужское имя', 'аким', {
-            cell: 6,
-            row: 4,
-            vertical: true
-        }),
-        new Word('Червь класса нематод', 'трихина', {
-            cell: 8,
-            row: 4,
-            vertical: true
-        }),
-        new Word('Искусственный язык', 'эсперанто', {
-            cell: 0,
-            row: 5
-        }),
-        new Word('Дисциплина в мотоциклетном спорте', 'триал', {
-            cell: 0,
-            row: 7
-        }, {
-            cell: 0,
-            row: 6
-        }),
-        new Word('Имя французских королей', 'карл', {
-            cell: 5,
-            row: 6
-        }),
-        new Word('Одежда священника', 'риза', {
-            cell: 2,
-            row: 7,
-            vertical: true
-        }),
-        new Word('Оросительный канал', 'арык', {
-            cell: 3,
-            row: 7,
-            vertical: true
-        }),
-        new Word('Насекомое отряда двухкрылых', 'муха', {
-            cell: 5,
-            row: 7
-        }, {
-            cell: 6,
-            row: 8
-        }),
-        new Word('Часть комнаты, сдаваемая в наем', 'угол', {
-            cell: 7,
-            row: 7,
-            vertical: true
-        }),
-        new Word('Древневосточный бог грозы', 'адад', {
-            cell: 9,
-            row: 7,
-            vertical: true
-        }),
-        new Word('Страна в Азии', 'иран', {
-            cell: 0,
-            row: 8
-        }),
-        new Word('Единица яркости', 'нит', {
-            cell: 5,
-            row: 8,
-            vertical: true
-        }),
-        new Word('Экскурсовод', 'гид', {
-            cell: 6,
-            row: 9
-        }),
-        new Word('Жестокий, властный человек', 'тиран', {
-            cell: 0,
-            row: 9
-        }),
-        new Word('Основа', 'азы', {
-            cell: 0,
-            row: 10
-        }),
-        new Word('Изорбражение бога, святых', 'икона', {
-            cell: 4,
-            row: 10
-        }),
-        new Word('Короткая верхняя одежда', 'жакет', {
-            cell: 0,
-            row: 11
-        }),
-        new Word('Согласие, мир, порядок', 'лад', {
-            cell: 6,
-            row: 11
-        })
-    ], 10, 12)
-
-    const scanword0 = {
-        width: 6,
-        height: 4,
-        words: {
-            't1': {
-                question: 'q1',
-                word: 'te',
-                answer: [],
-                active: true,
-                pos: {
-                    cell: 0,
-                    row: 0
-                }
-            },
-            't2': {
-                question: 'q2',
-                word: 'testa',
-                answer: [],
-                active: true,
-                pos: {
-                    cell: 0,
-                    row: 1
-                }
-            },
-            't3': {
-                question: 'q3',
-                word: 'testb',
-                answer: [],
-                active: true,
-                pos: {
-                    cell: 0,
-                    row: 2
-                }
-            },
-            't4': {
-                question: 'q4',
-                word: 'testc',
-                answer: [],
-                active: true,
-                pos: {
-                    cell: 0,
-                    row: 3
-                }
-            },
-            't5': {
-                question: 'q5',
-                word: 'abc',
-                answer: [],
-                active: true,
-                pos: {
-                    cell: 5,
-                    row: 0,
-                    vertical: true
-                }
-            },
-            't6': {
-                question: 't6',
-                word: 'tttt',
-                answer: [],
-                active: true,
-                pos: {
-                    cell: 3,
-                    row: 0,
-                    vertical: true
-                },
-                origin: {
-                    cell: 4,
-                    row: 0
+const loadScanwords = function () {
+    return new Promise(function (resolve, reject) {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', '/data/sc.json', true);
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 ) {
+                if (this.status == 200) {
+                    resolve(JSON.parse(this.responseText));
+                } else {
+                    reject(this.responseText);
                 }
             }
         }
+        xhr.send();        
+    });
+};
+
+(function () {
+    $(document).ready(function () {
+        loadScanwords()
+        .then(res => {
+            scanword = res;
+            buildScanword();
+            activeWord();
+            $('#total').text(scanword.words.length);
+            $('#done').text(scanword.done);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    });
+    const Scanword = function (scanword) {
+        this.words = scanword.words.map(
+            obj => new Word(obj)
+        );
+        // width and length are temporary
+        this.width = scanword.width;
+        this.height = scanword.height;
+        this.done = 0;
+    }
+    const Word = function (word) {
+        this.question = word.question;
+        this.word = word.word;
+        this.pos = word.pos;
+        word.origin ? this.origin = word.origin : null;
+        this.answer = [];
+        this.active = true;
     }
 
-    const scanword = scanword1;
     let currentCell = undefined,
         currentWord = undefined;
     let inputFocus = function () {
@@ -623,4 +396,4 @@
     let cellByPos = function (cell, row) {
         return $('.pos-' + cell + '-' + row);
     }
-})()
+})();
