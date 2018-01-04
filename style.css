@@ -33,7 +33,13 @@ body {
     text-decoration: none;
 }
 
+.cell {
+    text-transform: uppercase;
+    font-size: 30px;
+}
+
 .question {
+    text-transform: none;
     position: relative;
     background: lightgrey;
     font-size: 10px;
@@ -154,11 +160,6 @@ body {
 
 
 /* -------------------------- */
-
-.cell {
-    text-transform: uppercase;
-    font-size: 30px;
-}
 
 .selected.active {
     background: grey;

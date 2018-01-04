@@ -6,7 +6,7 @@
     });
     const Scanword = function (words, width, height) {
         this.words = words;
-        // width and length are temporary arguments
+        // width and length are temporary
         this.width = width;
         this.height = height;
     }
@@ -311,7 +311,7 @@
                     case 37:
                         if (currentWord.pos.vertical) {
                             const pos = getCellPos(currentCell);
-                            setActiveWord($('.pos-' + (pos.row) + '-' + (pos.cell - 1)));
+                            toggleWord(cellByPos(pos.cell - 1, pos.row));                            
                         } else {
                             toggleCell('prev')
                         }
@@ -321,13 +321,13 @@
                             toggleCell('prev')
                         } else {
                             const pos = getCellPos(currentCell);
-                            setActiveWord($('.pos-' + (pos.row - 1) + '-' + (pos.cell)));
+                            toggleWord(cellByPos(pos.cell, pos.row - 1));
                         }
                         break;
                     case 39:
                         if (currentWord.pos.vertical) {
                             const pos = getCellPos(currentCell);
-                            setActiveWord($('.pos-' + (pos.row) + '-' + (pos.cell + 1)));
+                            toggleWord(cellByPos(pos.cell + 1, pos.row));                            
                         } else {
                             toggleCell('next')
                         }
@@ -337,7 +337,7 @@
                             toggleCell('next')
                         } else {
                             const pos = getCellPos(currentCell);
-                            setActiveWord($('.pos-' + (pos.row + 1) + '-' + (pos.cell)));
+                            toggleWord(cellByPos(pos.cell, pos.row + 1));
                         }
                         break;
                 }
@@ -385,37 +385,38 @@
         }
         let words = scanword.words;
         for (let key in words) {
-            let word = words[key];
-            let cell = word.pos.cell,
+            let word = words[key],
+                cell = word.pos.cell,
                 row = word.pos.row;
-            let cellEl = $('.pos-' + row + '-' + cell);
-            cellEl.attr('class', 'question');
+            let qEl = cellByPos(cell, row);
+            qEl.addClass('question');
+            qEl.data('cell', word)
             if (word.origin) {
                 const origin = word.origin,
                     pos = word.pos;
                 if (origin.cell > pos.cell) {
-                    cellEl.addClass('arrow-right');
+                    qEl.addClass('arrow-right');
                 } else if (origin.cell < pos.cell) {
-                    cellEl.addClass('arrow-left');
+                    qEl.addClass('arrow-left');
                 }
                 if (origin.row > pos.row) {
-                    cellEl.addClass('arrow-bottom');
+                    qEl.addClass('arrow-bottom');
                 } else if (origin.row < pos.row) {
-                    cellEl.addClass('arrow-top');
+                    qEl.addClass('arrow-top');
                 }
                 if (word.pos.vertical) {
-                    cellEl.addClass('arrow-vertical');
+                    qEl.addClass('arrow-vertical');
                 } else {
-                    cellEl.addClass('arrow-horizontal');
+                    qEl.addClass('arrow-horizontal');
                 }
             } else {
                 if (word.pos.vertical) {
-                    cellEl.addClass('arrow-bottom arrow-vertical');
+                    qEl.addClass('arrow-bottom arrow-vertical');
                 } else {
-                    cellEl.addClass('arrow-right');
+                    qEl.addClass('arrow-right');
                 }
             }
-            cellEl.html('<span>' + word.question + '</span>');
+            qEl.html('<span>' + word.question + '</span>');
             wordCells(word, function (index, el) {
                 let data = el.data('cell') ? el.data('cell') : {};
                 if (word.pos.vertical) {
@@ -444,8 +445,14 @@
             word.pos.vertical ? row++ : cell++;
         }
         for (let i = 0; i < word.word.length; i++) {
-            let el = $('.pos-' + (word.pos.vertical ? ((row + i) + '-' + cell) : (row + '-' + (cell + i))));
-            callback(i, el);
+            let pos = word.pos.vertical ? {
+                cell: cell,
+                row: row + i
+            } : {
+                cell: cell + i,
+                row: row
+            };
+            callback(i, cellByPos(pos.cell, pos.row));
         }
     }
     let toggleCell = function (dir) {
@@ -454,36 +461,31 @@
             switch (dir) {
                 case 'next':
                     if (currentWord.pos.vertical) {
-                        setActiveCell($('.pos-' + (pos.row + 1) + '-' + pos.cell));
+                        setActiveCell(cellByPos(pos.cell, pos.row + 1));
                     } else {
-                        setActiveCell($('.pos-' + pos.row + '-' + (+pos.cell + 1)));
+                        setActiveCell(cellByPos(pos.cell + 1, pos.row));
                     }
                     break;
                 case 'prev':
                     if (currentWord.pos.vertical) {
-                        setActiveCell($('.pos-' + (pos.row - 1) + '-' + pos.cell));
-
+                        setActiveCell(cellByPos(pos.cell, pos.row - 1));
                     } else {
-                        setActiveCell($('.pos-' + pos.row + '-' + (pos.cell - 1)));
+                        setActiveCell(cellByPos(pos.cell - 1, pos.row));
                     }
                     break;
                 case 'first':
                     if (currentWord.pos.vertical) {
-                        const selector = '.pos-' + getWordPositions(currentWord).start + '-' + pos.cell;
-                        setActiveCell($(selector));
+                        setActiveCell(cellByPos(pos.cell, getWordPositions(currentWord).start));
 
                     } else {
-                        const selector =  '.pos-' + pos.row + '-' + getWordPositions(currentWord).start;
-                        setActiveCell($(selector));
+                        setActiveCell(cellByPos(getWordPositions(currentWord).start, pos.row));
                     }
                     break;
                 case 'last':
                     if (currentWord.pos.vertical) {
-                        const selector = '.pos-' + getWordPositions(currentWord).end + '-' + pos.cell;
-                        setActiveCell($(selector));
+                        setActiveCell(cellByPos(pos.cell, getWordPositions(currentWord).end));
                     } else {
-                        const selector = '.pos-' + pos.row + '-' + getWordPositions(currentWord).end;
-                        setActiveCell($(selector));
+                        setActiveCell(cellByPos(getWordPositions(currentWord).end, pos.row));
                     }
                     break;
             }
@@ -493,7 +495,7 @@
         $('.cell').on('click', function (e) {
             var el = $(this),
                 data = el.data('cell');
-            if (!el.hasClass('selected') || el.hasClass('active')) {
+            if (!el.hasClass('question') && (!el.hasClass('selected') || el.hasClass('active'))) {
                 toggleDir(data);
             }
             setActiveCell(el);
@@ -523,28 +525,49 @@
     let toggleDir = function (data) {
         if (data.vertical && data.horizontal) {
             if (currentWord == data.vertical.word) {
-                currentWord = data.horizontal.word;
+                setActiveWord(data.horizontal.word);
             } else {
-                currentWord = data.vertical.word;
+                setActiveWord(data.vertical.word);
             }
         } else {
-            currentWord = data.vertical ? data.vertical.word : data.horizontal.word;
+            setActiveWord(data.vertical ? data.vertical.word : data.horizontal.word);
         }
-        $('.cell').removeClass('selected');
-        wordCells(currentWord, function (index, el) {
-            el.addClass('selected');
-        })
+    }
+    let toggleWord = function (cell) {
+        const data = cell.data('cell');
+        if (cell.hasClass('question')) {
+            wordByQuestion(cell);
+        } else {
+            setActiveCell(cell);
+            if (data.vertical && data.horizontal) {
+                if (currentWord.pos.vertical) {
+                    setActiveWord(data.vertical.word);
+                } else {
+                    setActiveWord(data.horizontal.word);
+                }
+            } else {
+                setActiveWord(data.vertical ? data.vertical.word : data.horizontal.word);
+            }
+        }
     }
     let setActiveCell = function (el) {
         if (el.length) {
-            el.addClass('active')
-                .siblings()
-                .removeClass('active');
-            currentCell = el;
+            if (el.hasClass('question')) {
+                wordByQuestion(el);
+            } else {
+                el.addClass('active')
+                    .siblings()
+                    .removeClass('active');
+                currentCell = el;
+            }
         }
     }
-    let setActiveWord = function (el) {
-        console.log(el)
+    let setActiveWord = function (word) {
+        $('.cell').removeClass('selected');
+        wordCells(word, function (index, el) {
+            el.addClass('selected');
+        })
+        currentWord = word;
     }
     let getCellPos = function (el) {
         const pos = el.attr('class').split(' ').filter(
@@ -554,5 +577,25 @@
             row: +pos[1],
             cell: +pos[2]
         };
+    }
+    let wordByQuestion = function (qCell) {
+        const word = qCell.data('cell');
+        setActiveWord(word);
+        let pos;
+        if (word.origin) {
+            pos = {
+                row: word.origin.row,
+                cell: word.origin.cell
+            }
+        } else {
+            pos = {
+                row: word.pos.vertical ? word.pos.row + 1 : word.pos.row,
+                cell: word.pos.vertical ? word.pos.cell : word.pos.cell + 1
+            }
+        }
+        setActiveCell(cellByPos(pos.cell, pos.row));
+    }
+    let cellByPos = function (cell, row) {
+        return $('.pos-' + row + '-' + cell);
     }
 })()
