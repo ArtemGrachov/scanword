@@ -277,12 +277,15 @@
     let currentCell = undefined,
         currentWord = undefined;
     let inputFocus = function () {
-        $('body').on('keypress', function (e) {
+        $('#scanword').on('click', function (e) {
             e.preventDefault();
-            if (currentCell) inputSym(e.key);
+            $('#inp').focus();
         })
-        $('body').on('keydown', function (e) {
+        $('#inp').on('keydown', function (e) {
+            e.preventDefault();
             if (currentCell) {
+                if (e.key.match(/[а-яА-ЯіІїЇъЪёЁ]/))
+                    inputSym(e.key);
                 switch (e.keyCode) {
                     case 8:
                     case 46:
@@ -346,7 +349,11 @@
                     answer = data[key].word.answer,
                     index = data[key].index;
                 answer[index] = sym;
-                if (answer.join('').toLowerCase() == wordObj.word) {
+                if (answer.join('')
+                    .toLowerCase()
+                    .replace('ё', 'е')
+                    .replace('й', 'и') ==
+                    wordObj.word) {
                     setDone(wordObj);
                 }
             }
