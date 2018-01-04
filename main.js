@@ -279,24 +279,17 @@
         })
         $('#inp').on('keypress', function (e) {
             e.preventDefault();
-            if (currentCell) inputWord(e.key);
+            if (currentCell) inputSym(e.key);
         })
         $('#inp').on('keydown', function (e) {
             if (currentCell) {
                 switch (e.keyCode) {
                     case 8:
                     case 46:
-                        if (!currentCell.hasClass('done')) {
-                            if (e.keyCode == 8 && currentCell.text() == '') {
-                                toggleCell('prev');
-                            }
-                            var cellData = currentCell.data('cell');
-                            for (let key in cellData) {
-                                const data = cellData[key];
-                                data.word.answer[data.index] = null;
-                            }
-                            currentCell.text('')
+                        if (e.keyCode == 8 && currentCell.text() == '') {
+                            toggleCell('prev');
                         }
+                        removeSym();
                         break;
                     case 9:
                         e.preventDefault();
@@ -311,7 +304,7 @@
                     case 37:
                         if (currentWord.pos.vertical) {
                             const pos = getCellPos(currentCell);
-                            toggleWord(cellByPos(pos.cell - 1, pos.row));                            
+                            toggleWord(cellByPos(pos.cell - 1, pos.row));
                         } else {
                             toggleCell('prev')
                         }
@@ -327,7 +320,7 @@
                     case 39:
                         if (currentWord.pos.vertical) {
                             const pos = getCellPos(currentCell);
-                            toggleWord(cellByPos(pos.cell + 1, pos.row));                            
+                            toggleWord(cellByPos(pos.cell + 1, pos.row));
                         } else {
                             toggleCell('next')
                         }
@@ -344,7 +337,7 @@
             }
         })
     }
-    let inputWord = function (sym) {
+    let inputSym = function (sym) {
         if (!currentCell.hasClass('done')) {
             currentCell.text(sym);
             let data = currentCell.data('cell');
@@ -358,6 +351,10 @@
                 }
             }
             if (currentCell) toggleCell('next');
+        } else {
+            const diffSym = sym != currentCell.text(),
+                nextCell = toggleCell('next');
+            if (diffSym && nextCell) inputSym(sym);
         }
     }
     let setDone = function (wordObj) {
@@ -365,6 +362,18 @@
         wordCells(wordObj, function (index, el) {
             el.addClass('done');
         })
+    }
+    let removeSym = function () {
+        if (!currentCell.hasClass('done')) {
+            currentCell.text('');
+            let cellData = currentCell.data('cell');
+            for (let key in cellData) {
+                const data = cellData[key];
+                data.word.answer[data.index] = null;
+            }
+        } else {
+            toggleCell('prev');
+        }
     }
     let buildScanword = function () {
         let scanwordEl = $('#scanword');
@@ -376,7 +385,7 @@
             cell = 0;
         for (let i = 0; i < scanword.width * scanword.height; i++) {
             let cellEl = $('<a href="#" class="cell"></a>').appendTo('#scanword');
-            cellEl.addClass('pos-' + row + '-' + cell);
+            cellEl.addClass('pos-' + cell + '-' + row);
             cell++;
             if (cell >= scanword.width) {
                 row++;
@@ -560,7 +569,9 @@
                     .removeClass('active');
                 currentCell = el;
             }
+            return el;
         }
+        return false;
     }
     let setActiveWord = function (word) {
         $('.cell').removeClass('selected');
@@ -574,8 +585,8 @@
             cls => cls.indexOf('pos') > -1
         )[0].split('-');
         return {
-            row: +pos[1],
-            cell: +pos[2]
+            cell: +pos[1],
+            row: +pos[2]
         };
     }
     let wordByQuestion = function (qCell) {
@@ -596,6 +607,6 @@
         setActiveCell(cellByPos(pos.cell, pos.row));
     }
     let cellByPos = function (cell, row) {
-        return $('.pos-' + row + '-' + cell);
+        return $('.pos-' + cell + '-' + row);
     }
 })()
