@@ -273,15 +273,11 @@
     let currentCell = undefined,
         currentWord = undefined;
     let inputFocus = function () {
-        $('#scanword').on('click', function (e) {
-            e.preventDefault();
-            $('#inp').focus();
-        })
-        $('#inp').on('keypress', function (e) {
+        $('body').on('keypress', function (e) {
             e.preventDefault();
             if (currentCell) inputSym(e.key);
         })
-        $('#inp').on('keydown', function (e) {
+        $('body').on('keydown', function (e) {
             if (currentCell) {
                 switch (e.keyCode) {
                     case 8:
@@ -470,35 +466,36 @@
             switch (dir) {
                 case 'next':
                     if (currentWord.pos.vertical) {
-                        setActiveCell(cellByPos(pos.cell, pos.row + 1));
+                        return setActiveCell(cellByPos(pos.cell, pos.row + 1));
                     } else {
-                        setActiveCell(cellByPos(pos.cell + 1, pos.row));
+                        return setActiveCell(cellByPos(pos.cell + 1, pos.row));
                     }
                     break;
                 case 'prev':
                     if (currentWord.pos.vertical) {
-                        setActiveCell(cellByPos(pos.cell, pos.row - 1));
+                        return setActiveCell(cellByPos(pos.cell, pos.row - 1));
                     } else {
-                        setActiveCell(cellByPos(pos.cell - 1, pos.row));
+                        return setActiveCell(cellByPos(pos.cell - 1, pos.row));
                     }
                     break;
                 case 'first':
                     if (currentWord.pos.vertical) {
-                        setActiveCell(cellByPos(pos.cell, getWordPositions(currentWord).start));
+                        return setActiveCell(cellByPos(pos.cell, getWordPositions(currentWord).start));
 
                     } else {
-                        setActiveCell(cellByPos(getWordPositions(currentWord).start, pos.row));
+                        return setActiveCell(cellByPos(getWordPositions(currentWord).start, pos.row));
                     }
                     break;
                 case 'last':
                     if (currentWord.pos.vertical) {
-                        setActiveCell(cellByPos(pos.cell, getWordPositions(currentWord).end));
+                        return setActiveCell(cellByPos(pos.cell, getWordPositions(currentWord).end));
                     } else {
-                        setActiveCell(cellByPos(getWordPositions(currentWord).end, pos.row));
+                        return setActiveCell(cellByPos(getWordPositions(currentWord).end, pos.row));
                     }
                     break;
             }
         }
+        return false;
     }
     let activeWord = function () {
         $('.cell').on('click', function (e) {
