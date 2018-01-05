@@ -116,13 +116,13 @@
         cellSetActive: function (el) {
             const _this = this;
             if (el.length) {
+
+                el.addClass(_this.selectors.class.active)
+                    .siblings()
+                    .removeClass(_this.selectors.class.active);
+                _this.currentCell = el;
                 if (el.hasClass(_this.selectors.class.question)) {
                     _this.wordGetByQuestion(el);
-                } else {
-                    el.addClass(_this.selectors.class.active)
-                        .siblings()
-                        .removeClass(_this.selectors.class.active);
-                    _this.currentCell = el;
                 }
                 return el;
             }
@@ -194,20 +194,20 @@
             }
         },
         wordToggle: function (cell) {
-            const _this = this,
-                data = cell.data('cell');
-            if (cell.hasClass(_this.selectors.class.question)) {
-                _this.wordGetByQuestion(cell);
-            } else {
+            if (cell.length) {
+                const _this = this,
+                    data = cell.data('cell');
                 _this.cellSetActive(cell);
-                if (data.vertical && data.horizontal) {
-                    if (_this.currentWord.pos.vertical) {
-                        _this.wordSetActive(data.vertical.word);
+                if (!cell.hasClass(_this.selectors.class.question)) {
+                    if (data.vertical && data.horizontal) {
+                        if (_this.currentWord.pos.vertical) {
+                            _this.wordSetActive(data.vertical.word);
+                        } else {
+                            _this.wordSetActive(data.horizontal.word);
+                        }
                     } else {
-                        _this.wordSetActive(data.horizontal.word);
+                        _this.wordSetActive(data.vertical ? data.vertical.word : data.horizontal.word);
                     }
-                } else {
-                    _this.wordSetActive(data.vertical ? data.vertical.word : data.horizontal.word);
                 }
             }
         },
@@ -223,7 +223,6 @@
             const _this = this,
                 word = qCell.data('cell');
             _this.wordSetActive(word);
-            _this.cellSetActive(_this.cellByPos(word.pos.cell, word.pos.row));
         },
         symAdd: function (sym) {
             const _this = this;
@@ -247,21 +246,19 @@
             } else {
                 const diffSym = sym != _this.currentCell.text(),
                     nextCell = _this.cellToggle('next');
-                if (diffSym && nextCell) _this.symAdd(sym);
+                if (diffSym && nextCell && !nextCell.hasClass(_this.selectors.class.question)) _this.symAdd(sym);
             }
         },
         symRemove: function () {
             const _this = this;
-            if (!_this.currentCell.hasClass(_this.selectors.class.done)) {
+            if (!_this.currentCell.hasClass(_this.selectors.class.done) && !_this.currentCell.hasClass(_this.selectors.class.question)) {
                 _this.currentCell.text('');
                 let cellData = _this.currentCell.data('cell');
                 for (let key in cellData) {
                     const data = cellData[key];
                     data.word.answer[data.index] = null;
                 }
-            } else {
-                _this.cellToggle('prev');
-            }
+            };
         },
         init(selectors) {
             const _this = this;
@@ -377,22 +374,8 @@
                     _this.selectors.input.focus();
                 })
                 _this.selectors.input.on('keydown', function (e) {
-                    e.preventDefault();
                     if (_this.currentCell) {
-                        if (e.key.match(/[а-яА-ЯіІїЇъЪёЁ]/))
-                            _this.symAdd(e.key);
                         switch (e.keyCode) {
-                            case 8:
-                            case 46:
-                                if (e.keyCode == 8 && _this.currentCell.text() == '') {
-                                    _this.cellToggle('prev');
-                                }
-                                _this.symRemove();
-                                break;
-                            case 9:
-                                e.preventDefault();
-                                _this.wordToggleDir(_this.currentCell.data('cell'));
-                                break;
                             case 35:
                                 _this.cellToggle('last');
                                 break;
@@ -429,6 +412,35 @@
                                 } else {
                                     const pos = _this.cellGetPos(_this.currentCell);
                                     _this.wordToggle(_this.cellByPos(pos.cell, pos.row + 1));
+                                }
+                                break;
+                            default:
+                                if (_this.currentCell.hasClass(_this.selectors.class.question)) {
+                                    e.preventDefault();
+                                    const data = _this.currentCell.data('cell');
+                                    _this.cellSetActive(_this.cellByPos(data.pos.cell, data.pos.row));
+                                    if (e.key.match(/[а-яА-ЯіІїЇъЪёЁ]/)) {
+                                        _this.symAdd(e.key);
+                                    }
+                                } else {
+                                    if (e.key.match(/[а-яА-ЯіІїЇъЪёЁ]/))
+                                        _this.symAdd(e.key);
+                                    switch (e.keyCode) {
+                                        case 8:
+                                        case 46:
+                                            if (e.keyCode == 8 && (_this.currentCell.text() == '' || _this.currentCell.hasClass(_this.selectors.class.done))) {
+                                                const cellPos = _this.cellGetPos(_this.currentCell);
+                                                if (!(_this.currentWord.pos.cell == cellPos.cell && _this.currentWord.pos.row == cellPos.row)) {
+                                                    _this.cellToggle('prev');
+                                                }
+                                            }
+                                            _this.symRemove();
+                                            break;
+                                        case 9:
+                                            e.preventDefault();
+                                            _this.wordToggleDir(_this.currentCell.data('cell'));
+                                            break;
+                                    }
                                 }
                                 break;
                         }

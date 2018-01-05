@@ -108,6 +108,7 @@ body {
 .arrow-vertical:before {
     transform: rotate(90deg);
 }
+
 .arrow-bottom.arrow-horizontal:before,
 .arrow-top:before,
 .arrow-left:before,
@@ -140,7 +141,7 @@ body {
     background-image: url("data:image/svg+xml;charset=UTF-8, %3csvg width='48' height='48' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48' %3e%3cpolyline points='0,48, 8,24, 12,24' style='stroke: %23000; stroke-width:2; fill:none'/%3e%3cpolygon points='12,20 19,24 12,28' style='stroke:%23000; fill:%23000'/%3e%3c/svg%3e");
 }
 
-.selected.active {
+.cell.active {
     background: grey;
 }
 
