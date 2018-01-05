@@ -270,57 +270,5 @@
             "cell": 1,
             "row": 10
         }
-    }, {
-        "question": "\"Узник замка ...\"",
-        "word": "иф",
-        "pos": {
-            "cell": 3,
-            "row": 10
-        }
-    }, {
-        "question": "Лодка Хейердала",
-        "word": "ра",
-        "pos": {
-            "cell": 6,
-            "row": 10
-        }
-    }, {
-        "question": "Книга",
-        "word": "том",
-        "pos": {
-            "cell": 5,
-            "row": 11
-        }
-    }, {
-        "question": "объявление",
-        "word": "анонс",
-        "pos": {
-            "cell": 0,
-            "row": 11
-        },
-        "qPos": {
-            "cell": 1,
-            "row": 12
-
-        }
-    }, {
-        "question": "Римский император",
-        "word": "тит",
-        "pos": {
-            "cell": 3,
-            "row": 12
-        }
-    }, {
-        "question": "Токарев",
-        "word": "тт",
-        "pos": {
-            "cell": 6,
-            "row": 11,
-            "vertical": true
-        },
-        "qPos": {
-            "cell": 7,
-            "row": 12
-        }
     }
 ]

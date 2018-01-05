@@ -145,6 +145,10 @@ body {
     background: grey;
 }
 
+.empty {
+    background: black;
+}
+
 .selected {
     background: darkgrey;
 }
